@@ -1,0 +1,277 @@
+﻿<style>
+    #loader {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1000;
+        background-color: grey;
+        opacity: .8;
+    }
+
+    .dataloading {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        margin-left: -32px; /* -1 * image width / 2 */
+        margin-top: -32px; /* -1 * image height / 2 */
+        display: block;
+    }
+
+    .modal {
+        display: block;
+        height: 50%;
+        width: 50%;
+        background-color: white;
+        left: 25% !important;
+        overflow-y: hidden !important;
+        top: 52px !important;
+    }
+
+    #myModalContent {
+        word-wrap: break-word;
+    }
+
+    .modal-close-btn {
+        font-size: 1.5em;
+        cursor: pointer;
+        position: initial;
+        color: blue;
+    }
+
+    .clsGenerateLink {
+        cursor: pointer;
+    }
+</style>
+
+@model List<FileUpload.EDMX.UploadedFile>
+@{
+    ViewBag.Title = "FileUpload";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>FileUpload</h2>
+
+<div>
+    @Html.TextBox("file", "", new { type = "file" })
+    <br />
+
+    <input type="submit" value="Submit" id="submit" />
+
+    @ViewBag.Message
+
+    <div>
+        <h2>List of Uploaded files</h2>
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>File Name</th>
+                    <th>Created By</th>
+                    <th>Created Date</th>
+                    <th>Generate Link</th>
+                    <th>View</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.OrderByDescending(x => x.ID))
+                {
+                    <tr>
+                        <td>@item.FileName</td>
+                        <td>@item.CreatedBy</td>
+                        <td>@item.CreateDate</td>
+                        <th><a class="clsGenerateLink" data-id="@item.ID">Generate Link</a></th>
+                        <th><a href="../Dashboard/GetFileLinks?Id=@item.ID&FileName=@item.FileName" target="_blank"><img src="~/Images/view.png" alt="view" /></a></th>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+
+    <div id="loader" style="display:none">
+        <img src="~/Images/loading.gif" alt="Loader" class="dataloading" />
+    </div>
+
+</div>
+
+
+<div id='myModal' class='modal fade' role="dialog">
+
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Copy link</h4>
+            </div>
+            <div class="modal-body">
+                <p id="myModalContent"></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="../Scripts/jquery-1.10.2.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var workers = [];
+        var file = '';
+        var startChecksum = '';
+        var endChecksum = '';
+        var bytesPerChunk = '';
+
+        var directoryname = "@Guid.NewGuid().ToString()";
+
+        ///Modal methods start
+
+        //$("#myBtn").click(function () {
+        //    $("#myModal").modal("hide");
+        //});
+
+        //$("#myModal").on('hide.bs.modal', function () {
+        //    alert('The modal is about to be hidden.');
+        //});
+
+
+        //$('.modal').hide();
+        var generateLinkUrl = "../FileUpload/Modal";
+
+        $('.clsGenerateLink').click(function () {
+            var buttonClicked = $(this);
+            var id = buttonClicked.attr('data-id');
+
+            $.ajax({
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                url: '@Url.Action("Modal","FileUpload")',
+                data: '{Id: "' + id + '" }',
+                datatype: "html",
+                success: function (response) {
+                    $('#myModalContent').html(response);
+                    $('#myModal').modal('show');
+                },
+                error: function (data) {
+                    alert("Something went wrong.");
+                }
+            });
+        });
+
+
+        $('.body').on('click', '.modal-link', function (e) {
+            e.preventDefault();
+            $('this').attr('data-target', '#modal-container');
+            $('this').attr('data-toggle', 'modal');
+        });
+
+        $('.body').on('click', '.modal-close-btn', function () {
+            $('#myModal').modal('hide');
+        });
+
+        $('#modal-container').on('hidden.bs.modal', function () {
+            $(this).removeData('bs.modal');
+        })
+
+        ///Modal methods ends
+
+        $.ajax({
+            url: "../api/Helper/GetWebConfigData",
+            type: 'GET',
+            success: function (result) {
+                bytesPerChunk = result;
+            },
+            error: function (result) {
+                console.log(result);
+            }
+        });
+
+        $('#submit').click(function () {
+            $('#loader').css({ 'display': 'block' });
+
+            file = $('#file')[0].files;
+
+            var uploadworker = new Worker("../Scripts/workeruploadchunk.js");
+
+            uploadworker.onmessage = function (e) {
+                var data = e.data;
+            }
+            uploadworker.onerror = function (e) {
+                console.log("Something went wrong in workerupload");
+            }
+
+            var mergeworker = new Worker("../Scripts/workermergeall.js");
+            mergeworker.onmessage = function (e) {
+                var data = e.data;
+
+                switch (data.type) {
+                    case 'checksum':
+                        $('#loader').css({ 'display': 'none' });
+                        endChecksum = data.message;
+                        if (startChecksum.toString() === endChecksum.toString()) {
+                            alert("File uploaded successfully");
+
+                            var fileName = file[0].name;
+
+                            var data = JSON.stringify({
+                                'strFileName': fileName,
+                                'strGuid': directoryname
+                            });
+
+                            //var formData = new FormData($(this)[0]);
+                            $.ajax({
+                                type: 'POST',
+                                url: "../FileUpload/SaveFileData",
+                                contentType: "application/json; charset=utf-8",
+                                data: data,
+                                dataType: "json",
+                                success: function (view) {
+                                    console.log("success");
+                                    location.reload();
+                                },
+                                error: function (view) {
+                                    console.log("Error" + view);
+                                    location.reload();
+                                }
+                            });
+                        }
+                        else {
+                            alert("Oops! Something went wrong while uploading file");
+                        }
+                        break;
+                }
+            }
+            mergeworker.onerror = function (e) {
+                $('#loader').css({ 'display': 'none' });
+                console.log("Something went wrong in workermergeall");
+            }
+
+
+            var worker = new Worker("../Scripts/workerprocessfile.js");
+            worker.onmessage = function (e) {
+                var data = e.data;
+                switch (data.type) {
+                    case 'upload':
+                        uploadworker.postMessage({ 'chunk': data.blob, 'filename': data.filename, 'directory': directoryname, 'chunkCount': data.chunkCount, 'id': data.id })
+                        break;
+                    case 'checksum':
+                        startChecksum = data.message;
+                        break;
+                    case 'merge':
+                        mergeworker.postMessage({ 'filename': data.filename, 'directory': directoryname, 'chunkCount': data.chunkCount, 'id': data.id })
+                        break;
+                }
+            }
+            worker.onerror = function (e) {
+                worker.terminate();
+                console.log("Something went wrong in workerprocess");
+            }
+
+            // Start the file upload by sending a postMessage to the file processing web worker
+            worker.postMessage({ 'cmd': 'start', 'files': file, 'directory': directoryname, 'bytesperchunk': bytesPerChunk, 'id': 1 });
+
+        });
+    })
+</script>

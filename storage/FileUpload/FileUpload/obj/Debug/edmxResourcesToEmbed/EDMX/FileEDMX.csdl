@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="FileUploadDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="FileLink">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="FileID" Type="Int32" Nullable="false" />
+    <Property Name="LinkCreatedDate" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="LinkExpDate" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Link" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="UploadedFile" Relationship="Self.FK_FileLinks_ID" FromRole="FileLinks" ToRole="UploadedFiles" />
+  </EntityType>
+  <EntityType Name="UploadedFile">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="FileName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="FilePath" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CreatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="CreateDate" Type="DateTime" Precision="3" />
+    <Property Name="GUID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="FileLinks" Relationship="Self.FK_FileLinks_ID" FromRole="UploadedFiles" ToRole="FileLinks" />
+  </EntityType>
+  <Association Name="FK_FileLinks_ID">
+    <End Role="UploadedFiles" Type="Self.UploadedFile" Multiplicity="1" />
+    <End Role="FileLinks" Type="Self.FileLink" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UploadedFiles">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="FileLinks">
+        <PropertyRef Name="FileID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="FileUploadUtility_Test" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="FileLinks" EntityType="Self.FileLink" />
+    <EntitySet Name="UploadedFiles" EntityType="Self.UploadedFile" />
+    <AssociationSet Name="FK_FileLinks_ID" Association="Self.FK_FileLinks_ID">
+      <End Role="UploadedFiles" EntitySet="UploadedFiles" />
+      <End Role="FileLinks" EntitySet="FileLinks" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

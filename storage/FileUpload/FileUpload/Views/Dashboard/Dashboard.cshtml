@@ -1,0 +1,67 @@
+﻿<style>
+    .table {
+        table-layout: fixed;
+    }
+
+    .tdFileLink {
+        word-break: break-word;
+    }
+
+    #tableDashboard_paginate{
+        float: right;
+    }
+
+    .sorting_disabled{
+        color: cornflowerblue;
+    }
+</style>
+
+<h2 style="color: dodgerblue;">List of links created</h2>
+
+<h4>File Name: @ViewBag.selectedFileName</h4>
+
+
+<table class="table table-bordered" id="tableDashboard">
+    <thead>
+        <tr>
+            <th>File Link</th>
+            <th>Created Date (UTC Date)</th>
+            <th>Expiry Date (UTC Date)</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Count == 0)
+        {
+            <tr>
+                <td colspan="3" align="center">
+                    No records found
+                </td>
+            </tr>
+        }
+        else
+        {
+        foreach (var item in Model)
+            {
+            <tr>
+                <td class="tdFileLink"><a href="@item.FileLink" target="_blank">@item.FileLink</a></td>
+                <td>@DateTime.ParseExact(@item.LinkCreatedDate, "yyyy-MM-dd HH.mm.ss.ffffff", null)</td>
+                <td>@DateTime.ParseExact(@item.LinkExpDate, "yyyy-MM-dd HH.mm.ss.ffffff", null)</td>
+            </tr>
+        }
+        }
+    </tbody>
+</table>
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#tableDashboard').dataTable({
+            ordering: false,
+            searching: false,
+            bLengthChange: false
+        });
+    })
+    
+</script>
