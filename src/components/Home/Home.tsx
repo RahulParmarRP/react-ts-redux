@@ -1,10 +1,16 @@
 import * as React from 'react'
 
-export class Home extends React.Component<{}, {}> {
+type Props = {
+    message: string
+}
+
+
+export class Home extends React.Component<Props, {}> {
+
     render() {
         return (
             <div>
-                Home
+                Hello , {this.props.message}
             </div>
         )
     }
