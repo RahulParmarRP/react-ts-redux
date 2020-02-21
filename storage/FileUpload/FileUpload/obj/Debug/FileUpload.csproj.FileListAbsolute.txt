@@ -1,3 +1,0 @@
-\\pct90\Shared\FileSharing\Source Code\FileUpload\FileUpload\obj\Debug\FileUpload.csprojAssemblyReference.cache
-\\pct90\Shared\FileSharing\Source Code\FileUpload\FileUpload\obj\Debug\FileUpload.dll
-\\pct90\Shared\FileSharing\Source Code\FileUpload\FileUpload\obj\Debug\FileUpload.pdb
