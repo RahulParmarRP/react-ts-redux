@@ -1,26 +1,23 @@
-import { userConstants } from '../_constants';
-import LocalStorage from '../helpers/LocalStorage';
+import { userActionConstants } from '../constants/userActionConstants';
 
-LocalStorage localStorage = new LocalStorage();
-
-let user = JSON.parse(localStorage.getItem('user'));
+let user = JSON.parse(localStorage.get('user'));
 const initialState = user ? { loggedIn: true, user } : {};
 
-export function authentication(state = initialState, action) {
+export function authentication(state = initialState, action: { type: any; user: any; }) {
     switch (action.type) {
-        case userConstants.LOGIN_REQUEST:
+        case userActionConstants.LOGIN_REQUEST:
             return {
                 loggingIn: true,
                 user: action.user
             };
-        case userConstants.LOGIN_SUCCESS:
+        case userActionConstants.LOGIN_SUCCESS:
             return {
                 loggedIn: true,
                 user: action.user
             };
-        case userConstants.LOGIN_FAILURE:
+        case userActionConstants.LOGIN_FAILURE:
             return {};
-        case userConstants.LOGOUT:
+        case userActionConstants.LOGOUT:
             return {};
         default:
             return state

@@ -1,3 +1,4 @@
+import LocalStorage from "../helpers/LocalStorage";
 
 export const userService = {
     login,
@@ -15,8 +16,9 @@ function login(username: string, password: string): Promise<string> {
     return fetch(`http://localhost:5002/users/authenticate`, requestOptions)
         .then(handleResponse)
         .then(user => {
+            let localStorage = new LocalStorage();
             // store user details and jwt token in local storage to keep user logged in between page refreshes
-            localStorage.setItem('user', JSON.stringify(user));
+            localStorage.set('user', JSON.stringify(user));
 
             return user;
         });
