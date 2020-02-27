@@ -1,4 +1,5 @@
-import { userActionConstants } from '../constants';
+import { userConstants } from '../constants';
+import { User, UserAction } from '../actions';
 
 const myUser = localStorage.getItem('user');
 
@@ -6,26 +7,27 @@ const myUser = localStorage.getItem('user');
 //     var user = JSON.parse(myUser);
 // }
 
-var user = JSON.parse(window.localStorage.getItem('user') || '{}')
+export interface AccessToken {
+    isFetching: boolean
+    accessToken?: string
+}
+
+export interface AuthState {
+    loggingIn?: boolean
+    loggedIn?: boolean
+    user?: User
+}
+
+var user = JSON.parse(window.localStorage.getItem('user') || '{}') as User
 
 const initialState = user ? { loggedIn: true, user } : {};
 
-export function authentication(state = initialState, action: { type: any; user: any; }) {
+export function authentication(state: AuthState = initialState, action: UserAction): AuthState {
     switch (action.type) {
-        case userActionConstants.LOGIN_REQUEST:
-            return {
-                loggingIn: true,
-                user: action.user
-            };
-        case userActionConstants.LOGIN_SUCCESS:
-            return {
-                loggedIn: true,
-                user: action.user
-            };
-        case userActionConstants.LOGIN_FAILURE:
-            return {};
-        case userActionConstants.LOGOUT:
-            return {};
+        case 'LOGIN_REQUEST':
+            return { loggingIn: true, user: action.user };
+        case 'LOGIN_SUCCESS':
+            return { loggedIn: true, user: action.user };
         default:
             return state
     }

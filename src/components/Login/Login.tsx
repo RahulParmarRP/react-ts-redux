@@ -1,6 +1,10 @@
 import * as React from 'react'
 import { connect } from 'react-redux';
-import { userActions } from '../../actions';
+import { login } from '../../actions';
+import { RootState } from '../../reducers';
+import { AuthState, authentication } from '../../reducers/authentication.reducer';
+import { ThunkDispatch } from 'redux-thunk'
+
 // export type Props = {
 //     defaultCount: number
 // }
@@ -20,14 +24,18 @@ interface LocalState {
     username: string,
     password: string
 } // Internal state for the component
-interface StateProps { accessToken: string }  // Props those being mapped from Store
+
+interface StateProps { authentication: AuthState }  // Props those being mapped from Store
+
 interface DispatchProps { login: (username: string, password: string) => void } // Dispatchable methods (invoke our store's actions)
+
 interface OwnProps { } // Normal properties for the component 
+
 // combine them together
 type Props = StateProps & DispatchProps & OwnProps
 
-
 class Login extends React.Component<Props, LocalState> {
+
     // constructor(props: {}) {
     //     super(props);
     //     // this.state = {
@@ -42,15 +50,18 @@ class Login extends React.Component<Props, LocalState> {
     }
 
     handleChange = (e: React.FormEvent<HTMLInputElement>) => {
+
         const { name, value }: any = e.target
+
         //const { name, value }: { name: "username"|"password"; value: string } = e.currentTarget
         //public onChange(event: { target: { name: keyof IAddPlayerFormState; value: any; }; })
+
         const newState = { [name]: value } as Pick<LocalState, keyof LocalState>;
+        this.setState(newState);
+
         //console.log(e.currentTarget.name);
         //console.log(e.currentTarget.value);
         // const { name, value }: { name: keyof IState, value: string } = e.target;
-
-        this.setState(newState);
     }
 
     handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -58,10 +69,6 @@ class Login extends React.Component<Props, LocalState> {
         console.log(this.state);
         const { username, password } = this.state;
         this.props.login(username, password);
-    }
-
-    componentDidMount() {
-
     }
 
     render() {
@@ -77,22 +84,31 @@ class Login extends React.Component<Props, LocalState> {
     }
 }
 
-
+// Take local state from the global state, take local states which are only necessary for this component
 const mapStateToProps = (states: RootState, ownProps: OwnProps): StateProps => {
     return {
-      accessToken: states.session.accessToken
+        authentication: states.authentication
     }
-  }
-  
-function mapState(state) {
-    const { loggingIn } = state.authentication;
-    return { loggingIn };
 }
 
-const actionCreators = {
-    login: userActions.login,
-    logout: userActions.logout
-};
+const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any>, ownProps: OwnProps): DispatchProps => {
+    return {
+        login: async (username, password) => {
+            await dispatch(login(username, password))
+            console.log('Login completed [UI]')
+        }
+    }
+}
 
-const connectedLoginPage = connect(mapState, actionCreators)(Login);
+// function mapState(state) {
+//     const { loggingIn } = state.authentication;
+//     return { loggingIn };
+// }
+
+// const actionCreators = {
+//     login: userActions.login,
+//     logout: userActions.logout
+// };
+
+const connectedLoginPage = connect(mapStateToProps, mapDispatchToProps)(Login);
 export { connectedLoginPage as Login };

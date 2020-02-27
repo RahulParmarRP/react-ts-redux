@@ -45,7 +45,7 @@ function login(username: string, password: string): Promise<string> {
 }
 
 
-function logout() {
+function logout(): void {
     // remove user from local storage to log user out
     window.localStorage.removeItem('user');
 }
