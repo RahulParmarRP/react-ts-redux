@@ -1,0 +1,58 @@
+name: PD
+
+on:
+  push:
+    branches:
+    - Github_Actions_CICD
+      
+jobs:
+  Build-Test-Deploy:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.0.100
+    - name: Build with dotnet
+      run: dotnet publish
+           --source https://api.nuget.org/v3/index.json
+           --source https://nuget.fannexcontrol.com/nuget Fannex.Interactive.Api/Fannex.Interactive.Api.csproj 
+           --configuration Production
+    - name: Run tests
+      run: dotnet test
+    - name: Revert commit on build/test failure
+      if: failure()
+      run: sh ./.github/scripts/revertCommit.sh
+      env:
+           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+           BRANCH_NAME: Github_Actions_CICD
+    - name: Change AppSettings.json
+      run: |
+        cd .\Fannex.Interactive.Api\bin\Production\netcoreapp3.0\publish
+        echo '${{ secrets.PdAppSettings }}' > appsettings.json
+    - name: Upload publish.zip as artifacts
+      uses: actions/upload-artifact@v1
+      with:
+        name: publish-artifact
+        path: .\Fannex.Interactive.Api\bin\Production\netcoreapp3.0\publish
+    - name: Set environment variables
+      run: |
+       echo "::set-env name=PD_COMPUTER_NAME::${{ secrets.PdComputerName }}"
+       echo "::set-env name=PD_USERNAME::${{ secrets.PdUsername }}"
+       echo "::set-env name=PD_PASSWORD::${{ secrets.PdPassword }}"
+       echo "::set-env name=PD_CONTENTPATH::${{ secrets.PdContentPath }}"
+       echo "::set-env name=PASSWORD::cC19G5RIROFH"
+    - name: Stop Application Pool
+      shell: cmd
+      run: '"C:/Program Files (x86)/IIS/Microsoft Web Deploy V3/msdeploy.exe" -verb:sync -allowUntrusted -source:recycleApp -dest:recycleApp="interpd.fnxapp.com",recycleMode="StopAppPool",computerName="%PD_COMPUTER_NAME%",username="%PD_USERNAME%",password="%PASSWORD%",AuthType="Basic"'
+    - name: Delete application content
+      shell: cmd
+      run: '"C:/Program Files (x86)/IIS/Microsoft Web Deploy V3/msdeploy.exe" -verb:delete -allowUntrusted -dest:contentPath="%PD_CONTENTPATH%",computerName="%PD_COMPUTER_NAME%",username="%PD_USERNAME%",password="%PASSWORD%",authtype="Basic"'
+    - name: Deploy application
+      shell: cmd
+      run: '"C:/Program Files (x86)/IIS/Microsoft Web Deploy V3/msdeploy.exe" -verb:sync -allowUntrusted -source:contentPath="%CD%\Fannex.Interactive.Api\bin\Production\netcoreapp3.0\publish" -dest:contentPath="%PD_CONTENTPATH%",computerName="%PD_COMPUTER_NAME%",username="%PD_USERNAME%",password="%PASSWORD%",authtype="Basic"'
+    - name: Start Application Pool
+      shell: cmd
+      run: '"C:/Program Files (x86)/IIS/Microsoft Web Deploy V3/msdeploy.exe" -verb:sync -allowUntrusted -source:recycleApp -dest:recycleApp="interpd.fnxapp.com",recycleMode="StartAppPool",computerName="%PD_COMPUTER_NAME%",username="%PD_USERNAME%",password="%PASSWORD%",AuthType="Basic"'
