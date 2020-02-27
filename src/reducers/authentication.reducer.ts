@@ -1,6 +1,13 @@
-import { userActionConstants } from '../constants/userActionConstants';
+import { userActionConstants } from '../constants';
 
-let user = JSON.parse(localStorage.get('user'));
+const myUser = localStorage.getItem('user');
+
+// if (typeof myUser === 'string') {
+//     var user = JSON.parse(myUser);
+// }
+
+var user = JSON.parse(window.localStorage.getItem('user') || '{}')
+
 const initialState = user ? { loggedIn: true, user } : {};
 
 export function authentication(state = initialState, action: { type: any; user: any; }) {

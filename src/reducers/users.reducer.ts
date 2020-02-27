@@ -1,6 +1,6 @@
-import { userActionConstants } from '../constants/userActionConstants';
+import { userActionConstants } from '../constants';
 
-export function users(state = {}, action) {
+export function users(state = {}, action: { type: any; users: any; error: any; }) {
   switch (action.type) {
     case userActionConstants.GETALL_REQUEST:
       return {

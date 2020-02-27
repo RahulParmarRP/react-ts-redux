@@ -4,10 +4,15 @@ import { authentication } from './authentication.reducer';
 import { users } from './users.reducer';
 import { alert } from './alert.reducer';
 
-const rootReducer = combineReducers({
+
+export interface RootState {
+  authentication: typeof authentication
+  users: typeof users
+}
+
+const rootReducer = combineReducers<RootState>({
   authentication,
-  users,
-  alert
+  users
 });
 
 export default rootReducer;
