@@ -1,5 +1,5 @@
 import { userConstants } from '../constants';
-import { User, UserAction } from '../actions';
+import { User, UserAction } from '../actions/actionCreators/user.action.creators';
 
 const myUser = localStorage.getItem('user');
 

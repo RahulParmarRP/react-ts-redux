@@ -36,17 +36,13 @@ type Props = StateProps & DispatchProps & OwnProps
 
 class Login extends React.Component<Props, LocalState> {
 
-    // constructor(props: {}) {
-    //     super(props);
-    //     // this.state = {
-    //     //     username: "",
-    //     //     password: ""
-    //     // }
-    // }
 
-    state: LocalState = {
-        username: "",
-        password: ""
+    constructor(prop: Props) {
+        super(prop)
+        this.state = {
+            username: "",
+            password: ""
+        }
     }
 
     handleChange = (e: React.FormEvent<HTMLInputElement>) => {
