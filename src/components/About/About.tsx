@@ -1,14 +1,12 @@
 import React from "react"
 
-export const About: React.SFC<{ name: string }> = (props) => {
-    return (
-        <h2>About, {props.name}</h2>
-    )
+
+export type AboutProps = {
+    name: string
 }
 
-
-export const ExampleB: React.StatelessComponent<{}> = (props) => {
+export const About: React.SFC<AboutProps> = (props) => {
     return (
-        <div />
+        <h2>About, {props.name}</h2>
     )
 }

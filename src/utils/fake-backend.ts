@@ -1,4 +1,4 @@
-import { User } from '../models/User'
+import { User } from '../models/user'
 // array in local storage for registered users
 let users: User[] = JSON.parse(window.localStorage.getItem('users') || '{}') || [];
 

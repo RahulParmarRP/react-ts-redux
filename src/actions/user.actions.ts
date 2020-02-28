@@ -1,7 +1,7 @@
 import { userService } from '../services';
 import { ThunkAction, ThunkDispatch } from 'redux-thunk'
 import { AnyAction } from 'redux'
-import { history } from '../helpers/history';
+import { history } from '../utils/history';
 import { userActionCreator } from './actionCreators/user.action.creators';
 
 // thunk action

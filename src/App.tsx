@@ -3,16 +3,16 @@ import React from 'react';
 import { Login } from './components/Login/Login'
 import { Home } from './components/Home/Home'
 import { About } from './components/About/About'
-
-import { store } from './stores/Store'
+import { Login as FCLogin } from './components/FuncationalComponents/Login/Login'
+import { store } from './stores/store'
 import { Provider } from 'react-redux'
 
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 import './App.css';
-import { history } from './helpers/history';
+import { history } from './utils/history';
 
-import { configureFakeBackend } from './helpers/fake-backend';
+import { configureFakeBackend } from './utils/fake-backend';
 configureFakeBackend();
 
 const App = () => {
@@ -32,6 +32,9 @@ const App = () => {
                 <li>
                   <Link to="/login">Login</Link>
                 </li>
+                <li>
+                  <Link to="/FCLogin">FC Login</Link>
+                </li>
               </ul>
             </nav>
           </header>
@@ -41,6 +44,9 @@ const App = () => {
             </Route>
             <Route path="/login">
               <Login />
+            </Route>
+            <Route path="/FCLogin">
+              <FCLogin />
             </Route>
             <Route path="/">
               <Home message="world!" />
