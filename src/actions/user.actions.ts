@@ -3,9 +3,10 @@ import { ThunkAction, ThunkDispatch } from 'redux-thunk'
 import { AnyAction } from 'redux'
 import { history } from '../utils/history';
 import { userActionCreator } from './actionCreators/user.action.creators';
+import { AuthState } from '../types/states/AuthState';
 
 // thunk action
-export const login = (username: string, password: string): ThunkAction<Promise<void>, {}, {}, AnyAction> => {
+export const login = (username: string, password: string): ThunkAction<Promise<void>, AuthState, {}, AnyAction> => {
     // Invoke API
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
 
@@ -16,13 +17,13 @@ export const login = (username: string, password: string): ThunkAction<Promise<v
             console.log('Login in progress')
 
             userService.login(username, password)
-                .then(
-                    user => {
-                        dispatch(userActionCreator.success({ username, password }));
-                        console.log('Login done');
-                        history.push('/about');
-                    }
-                );
+                       .then(
+                           user => {
+                               dispatch(userActionCreator.success({ username, password }));
+                               console.log('Login done');
+                               history.push('/about');
+                           }
+                       );
         })
     }
 }

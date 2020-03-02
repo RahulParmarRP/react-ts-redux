@@ -1,16 +1,23 @@
 import { combineReducers } from 'redux';
+import { AuthState } from '../types/states/AuthState'
+import { authenticationReducer } from './authentication.reducer';
+import { userReducer } from './users.reducer';
+import { alertReducer } from './alert.reducer';
 
-import { authentication, AuthState } from './authentication.reducer';
-import { users } from './users.reducer';
-import { alert } from './alert.reducer';
 
 
 export interface RootState {
   authentication: AuthState
 }
 
-const rootReducer = combineReducers<RootState>({
-  authentication
+
+//export type RootState = ReturnType<typeof rootReducer>
+
+
+export const rootReducer = combineReducers<RootState>({
+  authentication: authenticationReducer
 });
+
+//export type RootState = ReturnType<typeof rootReducer>
 
 export default rootReducer;

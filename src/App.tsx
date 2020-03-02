@@ -1,16 +1,15 @@
 import React from 'react';
-
-import { Login } from './components/Login/Login'
-import { Home } from './components/Home/Home'
-import { About } from './components/About/About'
-import { Login as FCLogin } from './components/FuncationalComponents/Login/Login'
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { history } from './utils/history';
 import { store } from './stores/store'
 import { Provider } from 'react-redux'
 
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-
 import './App.css';
-import { history } from './utils/history';
+
+import { Login } from './components/Login/Login'
+import ResponsiveDrawer from './components/FunctionalComponents/Home/Home'
+import { About } from './components/About/About'
+import { Login as FCLogin } from './components/FunctionalComponents/Login/Login'
 
 import { configureFakeBackend } from './utils/fake-backend';
 configureFakeBackend();
@@ -48,8 +47,8 @@ const App = () => {
             <Route path="/FCLogin">
               <FCLogin />
             </Route>
-            <Route path="/">
-              <Home message="world!" />
+            <Route exact path="/">
+              <ResponsiveDrawer />
             </Route>
           </Switch>
         </div>

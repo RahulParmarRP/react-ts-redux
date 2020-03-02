@@ -1,24 +1,39 @@
+import * as LOGIN_ACTION_TYPES from '../actionTypeConstants/login.actions.types';
+
 export type User = {
     username: string
     password: string
 }
 
 export interface IActionLoginRequest {
-    type: 'LOGIN_REQUEST'
-    user: User
+    type: typeof LOGIN_ACTION_TYPES.LOGIN_REQUEST
+    payload: User
 }
 
 export interface IActionLoginSuccess {
-    type: 'LOGIN_SUCCESS'
-    user: User
+    type: typeof LOGIN_ACTION_TYPES.LOGIN_SUCCESS
+    payload: User
 }
 
 // Union Action Types
-export type UserAction = IActionLoginRequest | IActionLoginSuccess
+export type UserActionTypes = IActionLoginRequest | IActionLoginSuccess
+
+
 
 //Action Creators //these action creators are used for the react thunk which just wrap an action object as a return type of  a function
-export const request = (user: User): IActionLoginRequest => { return { type: 'LOGIN_REQUEST', user } };
-export const success = (user: User): IActionLoginSuccess => { return { type: 'LOGIN_SUCCESS', user } };
+export const request = (user: User): UserActionTypes => {
+    return {
+        type: LOGIN_ACTION_TYPES.LOGIN_REQUEST,
+        payload: user
+    }
+};
+
+export const success = (user: User): UserActionTypes => {
+    return {
+        type: LOGIN_ACTION_TYPES.LOGIN_SUCCESS,
+        payload: user
+    }
+};
 
 // export const request = (user: User): IActionLoginRequest => {
 //     return (dispatch): IActionLoginRequest => {
