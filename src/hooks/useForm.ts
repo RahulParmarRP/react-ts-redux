@@ -1,14 +1,13 @@
 import { useState } from 'react'
 import { LoginState } from '../types/states/LoginState'
 
-
 type ErrorMessages = {
     username: string | null
     password: string | null
 }
 
 type callbackFunctionType = () => void
-type validateFunctionType = (values: LoginState) => ErrorMessages
+//type validateFunctionType = (values: LoginState) => ErrorMessages
 
 const useForm = (callback: callbackFunctionType) => {
 

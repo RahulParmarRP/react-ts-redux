@@ -1,10 +1,7 @@
-
-
 export const userService = {
     login,
     logout
 };
-
 
 function handleResponse(response: Response) {
     return response.text()

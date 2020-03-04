@@ -1,32 +1,46 @@
 import { userService } from '../services';
 import { ThunkAction, ThunkDispatch } from 'redux-thunk'
-import { AnyAction } from 'redux'
+import { AnyAction, Action } from 'redux'
 import { history } from '../utils/history';
-import { userActionCreator } from './actionCreators/user.action.creators';
+import { LoginActionCreator } from './actionCreators/user.action.creators';
 import { AuthState } from '../types/states/AuthState';
+import { RootState } from '../reducers'
 
 // thunk action
-export const login = (username: string, password: string): ThunkAction<Promise<void>, AuthState, {}, AnyAction> => {
+export const login = (username: string, password: string): ThunkAction<Promise<void>, AuthState, unknown, AnyAction> => {
+
     // Invoke API
-    return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
+    return async (dispatch: ThunkDispatch<AuthState, unknown, AnyAction>): Promise<void> => {
 
         return new Promise<void>((resolve) => {
 
-            dispatch(userActionCreator.request({ username, password }))
+            debugger
+            dispatch(LoginActionCreator.request({ username, password }))
 
             console.log('Login in progress')
 
+            //API CALL
             userService.login(username, password)
-                       .then(
-                           user => {
-                               dispatch(userActionCreator.success({ username, password }));
-                               console.log('Login done');
-                               history.push('/about');
-                           }
-                       );
+                .then(
+                    user => {
+
+                        dispatch(LoginActionCreator.success({ username, password }));
+
+                        console.log('Login done');
+                        history.push('/about');
+                    }
+                );
         })
     }
 }
+
+
+export type AppThunk<ReturnType = void> = ThunkAction<
+    ReturnType,
+    RootState,
+    unknown,
+    Action<string>
+>
 
 // function logout() {
 //     userService.logout();

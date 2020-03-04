@@ -2,7 +2,7 @@ import * as React from 'react'
 import { connect } from 'react-redux';
 import { login } from '../../actions';
 import { RootState } from '../../reducers';
-import AuthState from '../../types/states/AuthState'
+import { AuthState } from '../../types/states/AuthState'
 import { authenticationReducer } from '../../reducers/authentication.reducer';
 import { ThunkDispatch } from 'redux-thunk'
 

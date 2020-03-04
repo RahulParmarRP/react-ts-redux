@@ -43,7 +43,7 @@ export const success = (user: User): UserActionTypes => {
 //     }
 // }
 
-export const userActionCreator = {
+export const LoginActionCreator = {
     request,
     success
 }

@@ -3,13 +3,13 @@ import React from 'react'
 import { useDispatch } from 'react-redux'
 
 import useForm from '../../../hooks/useForm';
+import * as UserLoginAction from '../../../actions'
 
 import styles from './Login.module.scss';
 
 import { Button, TextField, InputAdornment } from '@material-ui/core';
 import VpnKey from '@material-ui/icons/VpnKey';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import { login } from '../../../actions';
 
 export const Login: React.FC<{}> = () => {
 
@@ -97,14 +97,14 @@ export const Login: React.FC<{}> = () => {
                             color="primary"
                             className={styles.submitButton}
                             type="submit"
-                            onClick={useDispatch(login)}
+                            onClick={() => dispatch(UserLoginAction.login(values.username, values.password))}
                         >
                             SIGN IN
                         </Button>
                     </div>
                 </form>
             </div>
-        </div>
+        </div >
     );
 }
 

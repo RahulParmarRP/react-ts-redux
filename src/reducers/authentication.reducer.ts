@@ -1,9 +1,6 @@
-import { userConstants } from '../constants';
 import { User, UserActionTypes } from '../actions/actionCreators/user.action.creators';
 import { AuthState } from '../types/states/AuthState';
 import * as LOGIN_ACTION_TYPES from '../actions/actionTypeConstants/login.actions.types';
-
-const myUser = localStorage.getItem('user');
 
 // if (typeof myUser === 'string') {
 //     var user = JSON.parse(myUser);

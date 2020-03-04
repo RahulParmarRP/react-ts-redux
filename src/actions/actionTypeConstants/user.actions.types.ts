@@ -5,7 +5,7 @@ export const GETALL_FAILURE = "USERS_GETALL_FAILURE"
 
 
 
-// export const userActionCreator = {
+// export const UserConstants = {
 //     request,
 //     success
 // }
