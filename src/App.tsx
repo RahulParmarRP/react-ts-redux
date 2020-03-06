@@ -1,7 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import { history } from './utils/history';
-import { store } from './stores/store'
 import { Provider } from 'react-redux'
 
 import './App.css';
@@ -12,11 +11,12 @@ import { About } from './components/About/About'
 import { Login as FCLogin } from './components/FunctionalComponents/Login/Login'
 
 import { configureFakeBackend } from './utils/fake-backend';
+import { rootStore } from './reducers';
 configureFakeBackend();
 
 const App = () => {
   return (
-    <Provider store={store}>
+    <Provider store={rootStore}>
       <Router>
         <div className="App">
           <header className="App-header">

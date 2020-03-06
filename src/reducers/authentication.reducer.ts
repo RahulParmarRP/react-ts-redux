@@ -1,6 +1,7 @@
 import { User, UserActionTypes } from '../actions/actionCreators/user.action.creators';
 import { AuthState } from '../types/states/AuthState';
 import * as LOGIN_ACTION_TYPES from '../actions/actionTypeConstants/login.actions.types';
+import { AnyAction } from 'redux';
 
 // if (typeof myUser === 'string') {
 //     var user = JSON.parse(myUser);
@@ -13,9 +14,9 @@ import * as LOGIN_ACTION_TYPES from '../actions/actionTypeConstants/login.action
 
 var user = JSON.parse(window.localStorage.getItem('user') || '{}') as User
 
-const initialState = user ? { loggedIn: true, user } : {};
+const initialState: AuthState = user ? { loggingIn: false, loggedIn: true, user: user } : { loggingIn: false, loggedIn: false, user: null };
 
-export function authenticationReducer(state: AuthState = initialState, action: UserActionTypes): AuthState {
+export const authenticationReducer = (state: AuthState = initialState, action: UserActionTypes): AuthState => {
     switch (action.type) {
         case LOGIN_ACTION_TYPES.LOGIN_REQUEST:
             return {
@@ -31,3 +32,5 @@ export function authenticationReducer(state: AuthState = initialState, action: U
             return state
     }
 }
+
+export default authenticationReducer;

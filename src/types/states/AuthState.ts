@@ -1,7 +1,7 @@
 import { User } from "../../actions/actionCreators/user.action.creators";
 
 export interface AuthState {
-    loggingIn?: boolean
+    loggingIn?: boolean | undefined
     loggedIn?: boolean
-    user?: User
+    user: User | null
 }

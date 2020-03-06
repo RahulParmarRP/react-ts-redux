@@ -1,20 +1,21 @@
 import React from 'react'
 
-import { useDispatch } from 'react-redux'
-
+import { useDispatch, useSelector } from 'react-redux'
 import useForm from '../../../hooks/useForm';
-import * as UserLoginAction from '../../../actions'
-
 import styles from './Login.module.scss';
 
 import { Button, TextField, InputAdornment } from '@material-ui/core';
 import VpnKey from '@material-ui/icons/VpnKey';
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import { login } from '../../../actions';
+import { AuthState } from '../../../types/states/AuthState';
+import { User } from '../../../actions/actionCreators/user.action.creators';
 
 export const Login: React.FC<{}> = () => {
 
     const { handleChange, handleSubmit, values, errors } = useForm(submit);
     const dispatch = useDispatch();
+    var user = useSelector<AuthState, User>(s => s.user);
 
     function submit() {
         console.log("submitted successfully");
@@ -97,7 +98,7 @@ export const Login: React.FC<{}> = () => {
                             color="primary"
                             className={styles.submitButton}
                             type="submit"
-                            onClick={() => dispatch(UserLoginAction.login(values.username, values.password))}
+                            onClick={() => login()}
                         >
                             SIGN IN
                         </Button>

@@ -106,7 +106,6 @@ export default function ResponsiveDrawer(props: any) {
             </nav>
             <main className={classes.content}>
                 <div className={classes.toolbar} />
-
             </main>
         </div>
     );
