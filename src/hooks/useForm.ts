@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { LoginState } from '../types/states/LoginState'
+import { LoginAttemptState } from '../types/states/LoginAttemptState'
 
 type ErrorMessages = {
     username: string | null
@@ -11,13 +11,13 @@ type callbackFunctionType = () => void
 
 const useForm = (callback: callbackFunctionType) => {
 
-    const [values, setValues] = useState<LoginState>({ username: "", password: "" })
+    const [values, setValues] = useState<LoginAttemptState>({ username: "", password: "" })
     const [errors, setErrors] = useState<ErrorMessages>({ username: null, password: null })
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         debugger
         const { name, value }: any = event.target
-        const newState = { [name]: value } as Pick<LoginState, keyof LoginState>;
+        const newState = { [name]: value } as Pick<LoginAttemptState, keyof LoginAttemptState>;
         //setValues(newState);
         setValues({
             ...values,
@@ -44,7 +44,7 @@ const useForm = (callback: callbackFunctionType) => {
     }
 }
 
-export const validate = (values: LoginState): ErrorMessages => {
+export const validate = (values: LoginAttemptState): ErrorMessages => {
     debugger
     const errors = <ErrorMessages>{}
     if (values.username == "") {

@@ -1,9 +1,12 @@
+import { User } from "../models/User";
+
 export const userService = {
     login,
     logout
 };
 
 function handleResponse(response: Response) {
+    debugger
     return response.text()
         .then(text => {
 
@@ -24,7 +27,7 @@ function handleResponse(response: Response) {
         });
 }
 
-function login(username: string, password: string): Promise<string> {
+function login(username: string, password: string): Promise<User> {
 
     const requestOptions = {
         method: 'POST',
@@ -35,9 +38,10 @@ function login(username: string, password: string): Promise<string> {
     return fetch(`http://localhost:5002/users/authenticate`, requestOptions)
         .then(handleResponse)
         .then(user => {
+            //var user = JSON.parse(window.localStorage.getItem('user') || '{}') as User
             // store user details and jwt token in local storage to keep user logged in between page refreshes
             window.localStorage.setItem('user', JSON.stringify(user));
-            return user;
+            return user as User;
         });
 }
 

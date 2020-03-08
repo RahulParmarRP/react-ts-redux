@@ -1,4 +1,4 @@
-import { User } from "../../actions/actionCreators/user.action.creators";
+import { User } from "../../models/User";
 
 export interface AuthState {
     loggingIn?: boolean | undefined

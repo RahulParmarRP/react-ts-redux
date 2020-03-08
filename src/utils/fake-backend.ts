@@ -3,9 +3,10 @@ import { User } from '../models/User'
 let users: User[] = JSON.parse(window.localStorage.getItem('users') || '{}') || [];
 
 export function configureFakeBackend() {
+
     let realFetch = window.fetch;
     window.fetch = function (requestInfo: RequestInfo, opts?: RequestInit): Promise<Response> {
-
+        debugger
         return new Promise((resolve, reject) => {
 
             // wrap in timeout to simulate server api call
@@ -14,6 +15,7 @@ export function configureFakeBackend() {
                 let url = requestInfo.toString();
 
                 if (opts) {
+
                     // authenticate
                     if (url.endsWith('/users/authenticate') && opts.method === 'POST') {
 

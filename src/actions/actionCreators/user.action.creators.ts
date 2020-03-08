@@ -1,19 +1,19 @@
+
+import { Action } from 'redux';
+import { User } from '../../models/User';
 import * as LOGIN_ACTION_TYPES from '../actionTypeConstants/login.actions.types';
+import { LoginAttemptState } from '../../types/states/LoginAttemptState';
 
-export type User = {
-    username: string
-    password: string
-}
-
-export interface IActionLoginRequest {
+export interface IActionLoginRequest extends Action<typeof LOGIN_ACTION_TYPES.LOGIN_REQUEST> {
     type: typeof LOGIN_ACTION_TYPES.LOGIN_REQUEST
-    payload: User
+    payload: boolean
 }
-
-export interface IActionLoginSuccess {
+export interface IActionLoginSuccess extends Action<typeof LOGIN_ACTION_TYPES.LOGIN_SUCCESS> {
     type: typeof LOGIN_ACTION_TYPES.LOGIN_SUCCESS
     payload: User
 }
+
+export type ActionLoginRequest = IActionLoginRequest;
 
 // Union Action Types
 export type UserActionTypes = IActionLoginRequest | IActionLoginSuccess
@@ -21,10 +21,11 @@ export type UserActionTypes = IActionLoginRequest | IActionLoginSuccess
 
 
 //Action Creators //these action creators are used for the react thunk which just wrap an action object as a return type of  a function
-export const request = (user: User): UserActionTypes => {
+export const request = (isSigningIn: boolean): UserActionTypes => {
+    debugger
     return {
         type: LOGIN_ACTION_TYPES.LOGIN_REQUEST,
-        payload: user
+        payload: isSigningIn
     }
 };
 

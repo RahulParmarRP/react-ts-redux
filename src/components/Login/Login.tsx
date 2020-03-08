@@ -84,7 +84,7 @@ class Login extends React.Component<Props, LocalState> {
 // Take local state from the global state, take local states which are only necessary for this component
 const mapStateToProps = (states: RootState, ownProps: OwnProps): StateProps => {
     return {
-        authentication: states.authentication
+        authentication: states.auth
     }
 }
 

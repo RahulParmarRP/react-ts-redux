@@ -1,6 +1,6 @@
 export type User = {
     id: number
-    username: string
-    password: string
-    token: string
+    username: string | null
+    password: string | null
+    token: string | null
 }

@@ -2,20 +2,30 @@ import { userService } from '../services';
 import { ThunkAction, ThunkDispatch } from 'redux-thunk'
 import { AnyAction, Action } from 'redux'
 import { history } from '../utils/history';
-import { LoginActionCreator } from './actionCreators/user.action.creators';
+import { LoginActionCreator, UserActionTypes } from './actionCreators/user.action.creators';
 import { AuthState } from '../types/states/AuthState';
 import { RootState } from '../reducers'
+import { LoginAttemptState } from '../types/states/LoginAttemptState';
+import { User } from '../models/User';
 
 // thunk action
-export const login = (username: string, password: string): ThunkAction<Promise<void>, AuthState, unknown, AnyAction> => {
-
+export const login = (username: string, password: string): ThunkAction<Promise<void>, AuthState, unknown, UserActionTypes> => {
+    debugger
     // Invoke API
-    return async (dispatch: ThunkDispatch<AuthState, unknown, AnyAction>): Promise<void> => {
+    var loginAttempt: LoginAttemptState = {
+        username: username,
+        password: password
+    }
+
+    return async (
+        dispatch: ThunkDispatch<AuthState, unknown, UserActionTypes>,
+        getState: () => AuthState
+    ): Promise<void> => {
 
         return new Promise<void>((resolve) => {
 
             debugger
-            dispatch(LoginActionCreator.request({ username, password }))
+            dispatch(LoginActionCreator.request(true))
 
             console.log('Login in progress')
 
@@ -23,9 +33,8 @@ export const login = (username: string, password: string): ThunkAction<Promise<v
             userService.login(username, password)
                 .then(
                     user => {
-
-                        dispatch(LoginActionCreator.success({ username, password }));
-
+                        dispatch(LoginActionCreator.success(user));
+                        debugger
                         console.log('Login done');
                         history.push('/about');
                     }
