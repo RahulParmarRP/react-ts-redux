@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { LoginAttemptState } from '../types/states/LoginAttemptState'
+import { useDispatch } from 'react-redux'
 
 type ErrorMessages = {
     username: string | null
@@ -7,12 +8,13 @@ type ErrorMessages = {
 }
 
 type callbackFunctionType = () => void
-//type validateFunctionType = (values: LoginState) => ErrorMessages
+type validateFunctionType = (values: LoginAttemptState) => ErrorMessages
 
-const useForm = (callback: callbackFunctionType) => {
+const useForm = (callback: callbackFunctionType, validate?: validateFunctionType) => {
 
     const [values, setValues] = useState<LoginAttemptState>({ username: "", password: "" })
     const [errors, setErrors] = useState<ErrorMessages>({ username: null, password: null })
+    const dispatch = useDispatch();
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         debugger
@@ -33,6 +35,7 @@ const useForm = (callback: callbackFunctionType) => {
             //handling errors
             setErrors(validate(values));
         }
+
         callback();
     }
 
