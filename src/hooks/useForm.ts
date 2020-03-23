@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { LoginAttemptState } from '../types/states/LoginAttemptState'
 import { useDispatch } from 'react-redux'
+import { login } from '../actions'
+import { useHistory } from 'react-router-dom'
 
 type ErrorMessages = {
     username: string | null
@@ -10,11 +12,12 @@ type ErrorMessages = {
 type callbackFunctionType = () => void
 type validateFunctionType = (values: LoginAttemptState) => ErrorMessages
 
-const useForm = (callback: callbackFunctionType, validate?: validateFunctionType) => {
+const useForm = (callback: callbackFunctionType) => {
 
     const [values, setValues] = useState<LoginAttemptState>({ username: "", password: "" })
     const [errors, setErrors] = useState<ErrorMessages>({ username: null, password: null })
     const dispatch = useDispatch();
+    const history = useHistory();
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         debugger
@@ -31,12 +34,29 @@ const useForm = (callback: callbackFunctionType, validate?: validateFunctionType
         debugger
         event.preventDefault();
         console.log(values);
-        if (validate) {
-            //handling errors
-            setErrors(validate(values));
+        // if (validate) {
+        //     //handling errors
+        //     setErrors(validate(values));
+        // }
+
+        if (values.username !== null && values.password !== null) {
+            dispatch(login(values.username, values.password));
+            history.push('/');
+        }
+        callback();
+    }
+
+    const validate = (values: LoginAttemptState): ErrorMessages => {
+
+        // const errors = <ErrorMessages>{}
+        if (values.username == "") {
+            errors.username = "Username required!";
+        }
+        if (values.password == "") {
+            errors.password = "Password required!";
         }
 
-        callback();
+        return errors;
     }
 
     return {
@@ -45,19 +65,6 @@ const useForm = (callback: callbackFunctionType, validate?: validateFunctionType
         values,
         errors
     }
-}
-
-export const validate = (values: LoginAttemptState): ErrorMessages => {
-    debugger
-    const errors = <ErrorMessages>{}
-    if (values.username == "") {
-        errors.username = "Username required!";
-    }
-    if (values.password == "") {
-        errors.password = "Password required!";
-    }
-
-    return errors;
 }
 
 export default useForm;
