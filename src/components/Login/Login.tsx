@@ -1,7 +1,4 @@
 import React from 'react';
-
-import { useDispatch, useSelector } from 'react-redux';
-
 import useForm from '../../hooks/useForm';
 
 import { Link as SignUpLink } from 'react-router-dom';
@@ -55,55 +52,12 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-// const [values, setValues] = useState({ username: "", password: "" })
-// const [errors, setErrors] = useState({ username: null, password: null })
-
-// const handleChange = (event) => {
-//     debugger
-//     const { name, value } = event.target
-//     const newState = { [name]: value };
-//     //setValues(newState);
-//     // setValues({
-//     //     ...values,
-//     //     [name]: value
-//     // })
-// }
-
-
-// export const validate = (values) => {
-//     debugger
-//     const errors = {}
-//     if (values.username == "") {
-//         errors.username = "Username required!";
-//     }
-//     if (values.password == "") {
-//         errors.password = "Password required!";
-//     }
-
-//     return errors;
-// }
-
-
-// const handleSubmit = (event) => {
-//     debugger
-//     event.preventDefault();
-
-//     // login(user.username, user.password)
-//     // console.log(values);
-//     // validate(values);
-// }
-
 export const Login: React.FC<{}> = () => {
 
-
     const classes = useStyles();
-    const { handleChange, handleSubmit, values, errors } = useForm(submit);
-
-    const dispatch = useDispatch();
-    var user = useSelector<RootState, User | null>(s => s.auth.user);
+    const { handleChange, handleSubmit } = useForm(submit);
 
     function submit() {
-        console.log(user);
         console.log("submitted successfully");
     }
 
@@ -116,7 +70,7 @@ export const Login: React.FC<{}> = () => {
                 <Typography component="h1" variant="h5">
                     Sign in
                 </Typography>
-                <form className={classes.form} noValidate method="post">
+                <form className={classes.form} noValidate method="post" onSubmit={handleSubmit}>
                     <TextField
                         variant="outlined"
                         margin="normal"
@@ -146,12 +100,11 @@ export const Login: React.FC<{}> = () => {
                         label="Remember me"
                     />
                     <Button
-
+                        type="submit"
                         fullWidth
                         variant="contained"
                         color="primary"
                         className={classes.submit}
-                        onClick={() => dispatch(login("username", "password"))}
                     >
                         Sign In
                     </Button>
@@ -159,7 +112,7 @@ export const Login: React.FC<{}> = () => {
                         <Grid item xs>
                             <Link href="#" variant="body2">
                                 Forgot password?
-                    </Link>
+                            </Link>
                         </Grid>
                         <Grid item>
                             <SignUpLink to='/signup'>
