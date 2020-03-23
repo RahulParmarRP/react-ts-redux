@@ -75,19 +75,19 @@ const useStyles = makeStyles(theme => ({
 
 const tiers = [
     {
-        title: 'Free',
+        title: 'Free Membership',
         price: '0',
-        description: ['10 users included', '2 GB of storage', 'Help center access', 'Email support'],
+        description: ['Online session', 'online books', 'Help center access', 'Email support'],
         buttonText: 'Sign up for free',
         buttonVariant: 'outlined',
     },
     {
-        title: 'Pro',
+        title: 'Pro Membership',
         subheader: 'Most popular',
         price: '15',
         description: [
-            '20 users included',
-            '10 GB of storage',
+            'Live Session',
+            'Training at center',
             'Help center access',
             'Priority email support',
         ],
@@ -95,11 +95,11 @@ const tiers = [
         buttonVariant: 'contained',
     },
     {
-        title: 'Enterprise',
+        title: 'Group Membership',
         price: '30',
         description: [
-            '50 users included',
-            '30 GB of storage',
+            'Group discount',
+            'personal trainer',
             'Help center access',
             'Phone & email support',
         ],
@@ -132,11 +132,11 @@ export default function Pricing() {
     return (
         <React.Fragment>
             <CssBaseline />
-            <AppBar position="static" color="default" elevation={0} className={classes.appBar}>
+            {/* <AppBar position="static" color="default" elevation={0} className={classes.appBar}>
                 <Toolbar className={classes.toolbar}>
                     <Typography variant="h6" color="inherit" noWrap className={classes.toolbarTitle}>
                         Company name
-          </Typography>
+                    </Typography>
                     <nav>
                         <Link variant="button" color="textPrimary" href="#" className={classes.link}>
                             Features
@@ -152,16 +152,15 @@ export default function Pricing() {
                         Login
           </Button>
                 </Toolbar>
-            </AppBar>
+            </AppBar> */}
             {/* Hero unit */}
-            <Container maxWidth="sm" component="main" className={classes.heroContent}>
+            <Container maxWidth="md" component="main" className={classes.heroContent}>
                 <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
-                    Pricing
-        </Typography>
+                    Book the Session
+                </Typography>
                 <Typography variant="h5" align="center" color="textSecondary" component="p">
-                    Quickly build an effective pricing table for your potential customers with this layout.
-                    It&apos;s built with default Material-UI components with little customization.
-        </Typography>
+                    Book the session and avail the offers and/or promotions.
+                </Typography>
             </Container>
             {/* End hero unit */}
             <Container maxWidth="md" component="main">
@@ -185,7 +184,7 @@ export default function Pricing() {
                                         </Typography>
                                         <Typography variant="h6" color="textSecondary">
                                             /mo
-                    </Typography>
+                                        </Typography>
                                     </div>
                                     <ul>
                                         {tier.description.map(line => (
@@ -196,9 +195,9 @@ export default function Pricing() {
                                     </ul>
                                 </CardContent>
                                 <CardActions>
-                                    {/* <Button fullWidth variant={tier.buttonVariant} color="primary">
+                                    <Button fullWidth variant="contained" color="primary">
                                         {tier.buttonText}
-                                    </Button> */}
+                                    </Button>
                                 </CardActions>
                             </Card>
                         </Grid>
@@ -206,7 +205,7 @@ export default function Pricing() {
                 </Grid>
             </Container>
             {/* Footer */}
-            <Container maxWidth="md" component="footer" className={classes.footer}>
+            {/* <Container maxWidth="md" component="footer" className={classes.footer}>
                 <Grid container spacing={4} justify="space-evenly">
                     {footers.map(footer => (
                         <Grid item xs={6} sm={3} key={footer.title}>
@@ -228,7 +227,7 @@ export default function Pricing() {
                 <Box mt={5}>
                     <Copyright />
                 </Box>
-            </Container>
+            </Container> */}
             {/* End footer */}
         </React.Fragment>
     );
