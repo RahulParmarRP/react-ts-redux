@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import CameraIcon from '@material-ui/icons/PhotoCamera';
@@ -13,7 +13,8 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
-
+import axios from 'axios';
+import { useHistory } from 'react-router-dom';
 function Copyright() {
     return (
         <Typography variant="body2" color="textSecondary" align="center">
@@ -63,6 +64,23 @@ const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 export default function Album() {
     const classes = useStyles();
+    const [fcs, setCenters] = useState<any>([]);
+    const history = useHistory();
+    useEffect(() => {
+        axios.get("api/fitnesscenters")
+            .then(response => {
+                debugger
+                console.log(fcs);
+                setCenters(response.data)
+                console.log(response);
+                console.log(fcs);
+            })
+            .catch(error => console.log(error));
+    }, []);
+
+    const onClickCardHandler = (fitnessCenterId: number) => {
+        history.push(`/fitnesscenters/${fitnessCenterId}`);
+    }
 
     return (
         <React.Fragment>
@@ -73,35 +91,31 @@ export default function Album() {
                     <Container maxWidth="sm">
                         <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
                             Fitness Centers
-            </Typography>
-                        <Typography variant="h5" align="center" color="textSecondary" paragraph>
-                            Something short and leading about the collection below—its contents, the creator, etc.
-                            Make it short and sweet, but not too short so folks don&apos;t simply skip over it
-                            entirely.
-            </Typography>
+                        </Typography>
                         <div className={classes.heroButtons}>
                             <Grid container spacing={2} justify="center">
                                 <Grid item>
                                     <Button variant="contained" color="primary">
                                         Main call to action
-                  </Button>
+                                    </Button>
                                 </Grid>
                                 <Grid item>
                                     <Button variant="outlined" color="primary">
                                         Secondary action
-                  </Button>
+                                    </Button>
                                 </Grid>
                             </Grid>
                         </div>
                     </Container>
                 </div>
                 <Container className={classes.cardGrid} maxWidth="md">
+                    {console.log(fcs)}
                     {/* End hero unit */}
                     <Grid container spacing={4}>
-                        {cards.map(card => (
-                            <Grid item key={card} xs={12} sm={6} md={4}>
-                                <Card className={classes.card}>
-
+                        {fcs.map((fc: any) => (
+                            <Grid item key={fc.location} xs={12} sm={6} md={4}>
+                                <Card className={classes.card}
+                                    onClick={() => onClickCardHandler(fc.id)}>
                                     <CardMedia
                                         className={classes.cardMedia}
                                         image="https://source.unsplash.com/random"
@@ -109,19 +123,19 @@ export default function Album() {
                                     />
                                     <CardContent className={classes.cardContent}>
                                         <Typography gutterBottom variant="h5" component="h2">
-                                            Heading
-                    </Typography>
+                                            {fc.name}
+                                        </Typography>
                                         <Typography>
                                             This is a media card. You can use this section to describe the content.
-                    </Typography>
+                                        </Typography>
+                                        <Typography>
+                                            {fc.location}
+                                        </Typography>
                                     </CardContent>
                                     <CardActions>
                                         <Button size="small" color="primary">
-                                            View
-                    </Button>
-                                        <Button size="small" color="primary">
-                                            Edit
-                    </Button>
+                                            Details
+                                        </Button>
                                     </CardActions>
                                 </Card>
                             </Grid>

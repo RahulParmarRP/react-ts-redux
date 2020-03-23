@@ -6,13 +6,14 @@ import { Provider } from 'react-redux'
 import './App.css';
 
 import { Login } from './components/Login/Login'
-import ResponsiveDrawer from './components/Home/Home'
+//import ResponsiveDrawer from './components/Home/Home'
+import ResponsiveDrawer from './components/Dashboard/Drawer'
 import { About } from './components/About/About'
 
 import { configureFakeBackend } from './utils/fake-backend';
 import { rootStore } from './reducers';
 import SignUp from './components/SignUp/SignUp';
-configureFakeBackend();
+//configureFakeBackend();
 
 const App = () => {
   return (
@@ -38,16 +39,13 @@ const App = () => {
             </nav>
           </header> */}
           <Switch>
-            <Route path="/about">
-              <About name="React Architecture" />
-            </Route>
-            <Route path="/signup">
+            <Route exact path="/signup">
               <SignUp />
             </Route>
-            <Route path="/login">
+            <Route exact path="/login">
               <Login />
             </Route>
-            <Route exact path="/">
+            <Route path="/">
               <ResponsiveDrawer />
             </Route>
           </Switch>
