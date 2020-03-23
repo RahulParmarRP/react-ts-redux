@@ -1,44 +1,35 @@
 import { userService } from '../services';
 import { ThunkAction, ThunkDispatch } from 'redux-thunk'
 import { AnyAction, Action } from 'redux'
-import { history } from '../utils/history';
+
 import { LoginActionCreator, UserActionTypes } from './actionCreators/user.action.creators';
 import { AuthState } from '../types/states/AuthState';
 import { RootState } from '../reducers'
 import { LoginAttemptState } from '../types/states/LoginAttemptState';
 import { User } from '../models/User';
+import { useHistory } from 'react-router-dom';
 
 // thunk action
+
 export const login = (username: string, password: string): ThunkAction<Promise<void>, AuthState, unknown, UserActionTypes> => {
     debugger
     // Invoke API
-    var loginAttempt: LoginAttemptState = {
-        username: username,
-        password: password
-    }
 
     return async (
         dispatch: ThunkDispatch<AuthState, unknown, UserActionTypes>,
         getState: () => AuthState
     ): Promise<void> => {
-
         return new Promise<void>((resolve) => {
-
-            debugger
             dispatch(LoginActionCreator.request(true))
-
             console.log('Login in progress')
 
             //API CALL
             userService.login(username, password)
-                .then(
-                    user => {
-                        dispatch(LoginActionCreator.success(user));
-                        debugger
-                        console.log('Login done');
-                        history.push('/about');
-                    }
-                );
+                .then(user => {
+                    dispatch(LoginActionCreator.success(user));
+                    debugger
+                    console.log('Login done');
+                });
         })
     }
 }
